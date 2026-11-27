@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./how-it-works.css" layer(components);
+@import "./upcoming-waves.css" layer(components);
 
 @theme inline {
   --font-sans: var(--font-wix), ui-sans-serif, system-ui, sans-serif;

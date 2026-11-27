@@ -1,0 +1,239 @@
+/* ==================================================================
+   Upcoming waves – a row of tickets standing at an angle.
+
+   Deliberately calm: nothing here animates on its own. The 3D comes from
+   each ticket's fixed turn, its thickness and its shadow; the only motion
+   is a ticket turning to face you on hover or keyboard focus.
+   ================================================================== */
+
+.waves-glow {
+  position: absolute;
+  right: -12%;
+  top: -34%;
+  width: 760px;
+  height: 620px;
+  background: radial-gradient(closest-side, rgb(255 229 0 / 0.2), rgb(255 229 0 / 0));
+  pointer-events: none;
+}
+
+/* Small screens: swipe sideways through the tickets. Wide screens: all five. */
+.waves-row {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.waves-row::-webkit-scrollbar {
+  display: none;
+}
+
+.waves-row > li {
+  flex: 0 0 236px;
+  scroll-snap-align: center;
+}
+
+@media (min-width: 1180px) {
+  .waves-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 24px;
+    overflow: visible;
+  }
+}
+
+/* ---- the ticket ----
+   The shadows are drop-shadow filters rather than box-shadows so that they
+   follow the punched notches: the hard one is the ticket's edge (its
+   thickness, seen because of the turn), the soft one falls on the floor.   */
+.wave-ticket {
+  --edge: #d6cdac;
+  height: 100%;
+  transform: perspective(1100px) rotateY(14deg);
+  transform-origin: 50% 55%;
+  filter: drop-shadow(-7px 0 0 var(--edge)) drop-shadow(-16px 26px 20px rgb(60 48 0 / 0.2));
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    filter 0.6s var(--ease-out-expo);
+}
+
+.wave-ticket:hover,
+.wave-ticket:focus-within {
+  transform: perspective(1100px) rotateY(0deg) translateY(-10px);
+  filter: drop-shadow(0 0 0 var(--edge)) drop-shadow(0 30px 24px rgb(60 48 0 / 0.26));
+}
+
+.wave-ticket[data-featured] {
+  --edge: #000;
+}
+
+.wave-ticket-face {
+  --notch: 88px; /* where the stub tears off */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  color: #141414;
+  /* two half-width masks, each punching one semicircle out of its side */
+  -webkit-mask:
+    radial-gradient(circle 9px at 0 var(--notch), #0000 96%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% var(--notch), #0000 96%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 9px at 0 var(--notch), #0000 96%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 9px at 100% var(--notch), #0000 96%, #000) right / 51% 100% no-repeat;
+}
+
+.wave-ticket[data-featured] .wave-ticket-face {
+  background: linear-gradient(160deg, #1e1e20, #0c0c0d);
+  color: #fff;
+}
+
+/* ---- stub: the date ---- */
+.wave-stub {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: var(--notch);
+  padding: 15px 16px 0 20px;
+  background: linear-gradient(135deg, #fff8bd, #fdec8c);
+  border-bottom: 2px dashed rgb(17 17 17 / 0.2);
+  color: #141414;
+}
+
+.wave-ticket[data-featured] .wave-stub {
+  background: linear-gradient(135deg, #fff04d, var(--color-sun));
+  border-bottom-color: rgb(17 17 17 / 0.4);
+}
+
+.wave-month {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.wave-year {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: rgb(17 17 17 / 0.58);
+}
+
+.wave-type {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  margin-top: 3px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: inset 0 0 0 1px rgb(17 17 17 / 0.08);
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.wave-type[data-type="Standard"] {
+  background: #141414;
+  box-shadow: none;
+  color: var(--color-sun);
+}
+
+/* ---- body ---- */
+.wave-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px 20px 20px;
+}
+
+.wave-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #8a8674;
+}
+
+.wave-label::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.wave-ticket[data-featured] .wave-label {
+  color: var(--color-sun);
+}
+
+/* the flag as a raised, glossy coin */
+.wave-coin {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 4px rgb(17 17 17 / 0.1),
+    -5px 9px 14px rgb(60 48 0 / 0.32);
+}
+
+.wave-coin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 24%, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 46%),
+    radial-gradient(circle at 72% 88%, rgb(0 0 0 / 0.2), transparent 55%);
+}
+
+.wave-ticket[data-featured] .wave-coin {
+  box-shadow:
+    0 0 0 3px #2b2b2e,
+    0 0 0 4px rgb(255 255 255 / 0.14),
+    -5px 9px 16px rgb(0 0 0 / 0.65);
+}
+
+.wave-facts {
+  display: grid;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-stone);
+}
+
+.wave-facts li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.wave-facts svg {
+  flex: none;
+  margin-top: 0.5px;
+  color: #141414;
+}
+
+.wave-ticket[data-featured] .wave-facts {
+  color: rgb(255 255 255 / 0.72);
+}
+
+.wave-ticket[data-featured] .wave-facts svg {
+  color: var(--color-sun);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-ticket {
+    transition: none;
+  }
+}

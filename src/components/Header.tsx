@@ -49,9 +49,9 @@ export default function Header() {
           />
         </a>
 
-        <span className="mx-7 hidden h-7 w-px bg-white/15 lg:block" />
+        <span className="mx-7 hidden h-7 w-px bg-white/15 min-[1140px]:block" />
 
-        <nav className="hidden items-center gap-9 lg:flex">
+        <nav className="hidden items-center gap-9 whitespace-nowrap min-[1140px]:flex">
           {NAV.map((item) => (
             <a
               key={item.href}
@@ -82,7 +82,7 @@ export default function Header() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full text-white lg:hidden"
+            className="-mr-1 flex h-10 w-10 items-center justify-center rounded-full text-white min-[1140px]:hidden"
           >
             {open ? <Close size={22} /> : <Menu size={22} />}
           </button>
@@ -91,7 +91,7 @@ export default function Header() {
 
       {/* Mobile sheet */}
       <div
-        className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-500 ease-out lg:hidden ${
+        className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-500 ease-out min-[1140px]:hidden ${
           open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >
