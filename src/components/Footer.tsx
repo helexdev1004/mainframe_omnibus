@@ -1,4 +1,6 @@
 import Image from "next/image";
+// imported (not referenced by URL) so the path survives a basePath deploy
+import logo from "../../public/brand/mainframe-logo.png";
 import LanguagePill from "./LanguagePill";
 
 const LINKS = [
@@ -16,10 +18,8 @@ export default function Footer() {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
             <a href="#top" aria-label="mainframe — back to top" className="shrink-0">
               <Image
-                src="/brand/mainframe-logo.png"
+                src={logo}
                 alt="mainframe"
-                width={1320}
-                height={219}
                 className="h-[30px] w-auto"
               />
             </a>

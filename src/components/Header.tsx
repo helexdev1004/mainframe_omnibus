@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+// imported (not referenced by URL) so the path survives a basePath deploy
+import logo from "../../public/brand/mainframe-logo.png";
 import { Close, Menu } from "./Icons";
 import LanguagePill from "./LanguagePill";
 
@@ -40,10 +42,8 @@ export default function Header() {
       >
         <a href="#top" aria-label="mainframe — home" className="shrink-0">
           <Image
-            src="/brand/mainframe-logo.png"
+            src={logo}
             alt="mainframe"
-            width={1320}
-            height={219}
             priority
             className="h-[22px] w-auto sm:h-[30px]"
           />

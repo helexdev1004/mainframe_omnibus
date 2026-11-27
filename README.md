@@ -15,6 +15,12 @@ npm run build    # production build
 npm start        # serve the production build
 ```
 
+## Deploying
+
+Every push to `main` publishes the site to GitHub Pages through `.github/workflows/deploy.yml`. The workflow builds a static export (`out/`) with the repository name as the base path; `next.config.ts` only switches to that mode when the workflow's `GITHUB_PAGES` variable is set, so local development is unaffected.
+
+Pages has to be enabled once per repository: Settings → Pages → Source → GitHub Actions.
+
 ## Layout of the code
 
 | Path | What it holds |
