@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+.env*.local
+.DS_Store
+
+# Design references kept local, not in the repository (client brief and mock-up)
+/Hello_Omnibus_v1.pptx
+/Mainframe Consumer Insights Homepage.png
