@@ -82,6 +82,12 @@ export const Bars = (p: IconProps) => (
   </Icon>
 );
 
+export const TrendUp = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 16.5 9.5 11l3.5 3.5 7-7M14.5 7.5H20V13" />
+  </Icon>
+);
+
 export const Bolt = (p: IconProps) => (
   <Icon {...p}>
     <path d="M13.2 2.5 5 13.6h6l-1 7.9 8.2-11.1h-6l1-7.9z" />
