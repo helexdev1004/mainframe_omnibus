@@ -8,6 +8,13 @@ const basePath = process.env.PAGES_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // The dev server's on-disk cache once kept serving a stylesheet that was
+    // missing a component's classes, across restarts: on a synced folder
+    // (OneDrive here) it can miss file changes. Without it `next dev` just
+    // compiles fresh on each start.
+    turbopackFileSystemCacheForDev: false,
+  },
   ...(forPages && {
     output: "export",
     basePath,

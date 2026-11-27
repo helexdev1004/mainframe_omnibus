@@ -77,7 +77,7 @@ export default function Markets() {
         </Reveal>
 
         <Reveal delay={0.15} className="lg:-mr-16 xl:-mr-24">
-          <div className="[transform:perspective(1500px)_rotateX(16deg)_rotateZ(-2deg)]">
+          <div>
             <EuropeMap active={active.key}>
               <div
                 key={active.key}

@@ -43,6 +43,12 @@ The glass sphere and its glow never change as the globe turns, so `plate.ts` ren
 
 `config.ts` holds what both renderers share: camera, markets, orbit rings and timings. The maths in `shaders.ts` and `renderCanvas2d.ts` mirror each other, so a visual change needs making in both.
 
+## Keeping it sharp
+
+Text is never placed on a rotated or perspective-transformed element: browsers rasterise such elements and resample them, which leaves text soft, most visibly on machines without a GPU. The 3D artwork in "How it works" is therefore vector SVG, drawn with the small isometric kit in `src/components/iso.tsx`, and the country shapes in "Upcoming waves" are SVG dots built from `src/data/europe.json`.
+
+Animations that finish (`.reveal`, `.fade-up`) leave no transform or `will-change` behind, for the same reason.
+
 ## Changing markets or dot density
 
 The six markets are listed in three places: `scripts/generate-geo.mjs` (map data), `src/components/globe/config.ts` (capitals on the globe) and `src/components/Markets.tsx` (the chips). After editing the script, regenerate the data and commit the result:

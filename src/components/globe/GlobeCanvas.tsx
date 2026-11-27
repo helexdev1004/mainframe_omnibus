@@ -218,17 +218,18 @@ function createGlobe(wrap: HTMLDivElement, onReady: () => void) {
     if (!reduced) frame.time += dt;
     const time = frame.time;
 
-    // Keep it fluid. If frames keep running long once everything has settled:
-    // first shed resolution, and if a "GPU" still cannot keep up, hand over
-    // to the Canvas 2D renderer.
+    // Keep it fluid, WebGL only: if frames keep running long once everything
+    // has settled, first shed resolution, and if the "GPU" still cannot keep
+    // up, hand over to the Canvas 2D renderer. That one is never scaled down:
+    // it always draws at full sharpness.
     if (frame.intro < 1) lastTune = now + 1500; // ignore the busy first seconds
     frameCost += (Math.min(elapsed, 0.25) - frameCost) * 0.05;
-    if (frameCost > 0.045 && now - lastTune > 2000) {
+    if (hardware && frameCost > 0.045 && now - lastTune > 2000) {
       lastTune = now;
       if (resolution > 0.62) {
         resolution = Math.max(0.6, resolution * 0.85);
         applySize();
-      } else if (hardware && frameCost > 0.05) {
+      } else if (frameCost > 0.05) {
         hardware = false;
         resolution = 1;
         frameCost = 1 / 60;

@@ -1,9 +1,9 @@
 /* ==================================================================
-   Upcoming waves – a row of tickets standing at an angle.
+   Upcoming waves – a schedule: one column per month, one card per wave.
 
-   Deliberately calm: nothing here animates on its own. The 3D comes from
-   each ticket's fixed turn, its thickness and its shadow; the only motion
-   is a ticket turning to face you on hover or keyboard focus.
+   Everything is flat and axis-aligned so the text stays sharp. Depth comes
+   from layering (each card sits on a second sheet), soft shadows, and the
+   raised dot maps. The only motion is a small lift on hover or focus.
    ================================================================== */
 
 .waves-glow {
@@ -16,150 +16,186 @@
   pointer-events: none;
 }
 
-/* Small screens: swipe sideways through the tickets. Wide screens: all five. */
-.waves-row {
-  display: flex;
-  gap: 18px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.waves-row::-webkit-scrollbar {
-  display: none;
-}
-
-.waves-row > li {
-  flex: 0 0 236px;
-  scroll-snap-align: center;
-}
-
-@media (min-width: 1180px) {
-  .waves-row {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 24px;
-    overflow: visible;
-  }
-}
-
-/* ---- the ticket ----
-   The shadows are drop-shadow filters rather than box-shadows so that they
-   follow the punched notches: the hard one is the ticket's edge (its
-   thickness, seen because of the turn), the soft one falls on the floor.   */
-.wave-ticket {
-  --edge: #d6cdac;
-  height: 100%;
-  transform: perspective(1100px) rotateY(14deg);
-  transform-origin: 50% 55%;
-  filter: drop-shadow(-7px 0 0 var(--edge)) drop-shadow(-16px 26px 20px rgb(60 48 0 / 0.2));
-  transition:
-    transform 0.6s var(--ease-out-expo),
-    filter 0.6s var(--ease-out-expo);
-}
-
-.wave-ticket:hover,
-.wave-ticket:focus-within {
-  transform: perspective(1100px) rotateY(0deg) translateY(-10px);
-  filter: drop-shadow(0 0 0 var(--edge)) drop-shadow(0 30px 24px rgb(60 48 0 / 0.26));
-}
-
-.wave-ticket[data-featured] {
-  --edge: #000;
-}
-
-.wave-ticket-face {
-  --notch: 88px; /* where the stub tears off */
+/* ---- month column ---- */
+.waves-month {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 22px;
-  background: #fff;
-  color: #141414;
-  /* two half-width masks, each punching one semicircle out of its side */
-  -webkit-mask:
-    radial-gradient(circle 9px at 0 var(--notch), #0000 96%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle 9px at 100% var(--notch), #0000 96%, #000) right / 51% 100% no-repeat;
-  mask:
-    radial-gradient(circle 9px at 0 var(--notch), #0000 96%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle 9px at 100% var(--notch), #0000 96%, #000) right / 51% 100% no-repeat;
 }
 
-.wave-ticket[data-featured] .wave-ticket-face {
-  background: linear-gradient(160deg, #1e1e20, #0c0c0d);
-  color: #fff;
-}
-
-/* ---- stub: the date ---- */
-.wave-stub {
+.waves-month-head {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  height: var(--notch);
-  padding: 15px 16px 0 20px;
-  background: linear-gradient(135deg, #fff8bd, #fdec8c);
-  border-bottom: 2px dashed rgb(17 17 17 / 0.2);
-  color: #141414;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.wave-ticket[data-featured] .wave-stub {
-  background: linear-gradient(135deg, #fff04d, var(--color-sun));
-  border-bottom-color: rgb(17 17 17 / 0.4);
+.waves-month-dot {
+  align-self: center;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #141414;
+  box-shadow: 0 0 0 4px rgb(20 20 20 / 0.09);
 }
 
-.wave-month {
+.waves-month-head[data-next] .waves-month-dot {
+  background: var(--color-sun);
+  box-shadow:
+    0 0 0 1.5px #141414,
+    0 0 0 6px rgb(255 229 0 / 0.35);
+}
+
+.waves-month-name {
+  margin-left: 4px;
   font-family: var(--font-serif);
-  font-size: 44px;
+  font-size: 32px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
-.wave-year {
-  margin-top: 3px;
-  font-size: 12px;
+.waves-month-year {
+  font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.16em;
-  color: rgb(17 17 17 / 0.58);
+  letter-spacing: 0.14em;
+  color: #8a8674;
 }
 
-.wave-type {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  margin-top: 3px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.85);
-  box-shadow: inset 0 0 0 1px rgb(17 17 17 / 0.08);
-  font-size: 12.5px;
-  font-weight: 800;
-}
-
-.wave-type[data-type="Standard"] {
-  background: #141414;
-  box-shadow: none;
-  color: var(--color-sun);
-}
-
-/* ---- body ---- */
-.wave-body {
-  display: flex;
+.waves-month-line {
   flex: 1;
+  align-self: center;
+  height: 1px;
+  margin-left: 6px;
+  background: linear-gradient(90deg, rgb(17 17 17 / 0.22), rgb(17 17 17 / 0.04));
+}
+
+.waves-month-list {
+  display: grid;
+  flex: 1;
+  grid-auto-rows: 1fr;
+  gap: 22px;
+}
+
+/* ---- a wave ----
+   .wave-slot draws a second sheet under the card: that edge peeking out
+   below is what gives the card its thickness.                           */
+.wave-slot {
+  position: relative;
+  isolation: isolate;
+}
+
+.wave-slot::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 12px 14px -8px;
+  border-radius: 24px;
+  background: #e7e0c8;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.wave-slot[data-featured]::after {
+  background: var(--color-sun);
+}
+
+.wave-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 18px;
+  height: 100%;
+  padding: 20px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgb(17 17 17 / 0.08);
+  box-shadow:
+    0 2px 4px rgb(17 17 17 / 0.04),
+    0 20px 40px -24px rgb(70 58 0 / 0.3);
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    box-shadow 0.4s var(--ease-out-expo),
+    border-color 0.3s ease;
+}
+
+.wave-card:hover,
+.wave-card:focus-within {
+  transform: translateY(-5px);
+  border-color: var(--color-sun);
+  box-shadow:
+    0 2px 4px rgb(17 17 17 / 0.04),
+    0 30px 50px -26px rgb(70 58 0 / 0.42);
+}
+
+.wave-card-main {
+  display: flex;
   flex-direction: column;
-  padding: 20px 20px 20px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* the country, on its own little stage */
+.wave-card-map {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 40px 10px 10px;
+  border-radius: 16px;
+  background: radial-gradient(120% 100% at 18% 0%, #fff6ad 0%, #fdf3c4 34%, #f3efe2 100%);
+  box-shadow: inset 0 0 0 1px rgb(17 17 17 / 0.05);
+}
+
+.wave-card-map .wave-type {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.wave-dots {
+  width: 100%;
+  height: 100%;
+  max-height: 118px;
+}
+
+/* ---- the next wave ---- */
+.wave-card-featured {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background:
+    radial-gradient(70% 50% at 100% 0%, rgb(255 229 0 / 0.16), transparent 70%),
+    linear-gradient(160deg, #1e1e20, #0c0c0d);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 26px 50px -26px rgb(0 0 0 / 0.6);
+}
+
+.wave-card-featured:hover,
+.wave-card-featured:focus-within {
+  border-color: transparent;
+  box-shadow: 0 36px 60px -28px rgb(0 0 0 / 0.7);
+}
+
+.wave-feature-map {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 120px;
+  padding: 6px 0 18px;
+}
+
+.wave-feature-map .wave-dots {
+  max-height: 150px;
 }
 
 .wave-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
+  gap: 9px;
+  font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #8a8674;
+  color: var(--color-sun);
 }
 
 .wave-label::before {
@@ -170,20 +206,40 @@
   background: currentColor;
 }
 
-.wave-ticket[data-featured] .wave-label {
+.wave-type {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgb(17 17 17 / 0.1);
+  color: #141414;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.wave-type[data-type="Standard"] {
+  background: #141414;
+  box-shadow: none;
   color: var(--color-sun);
+}
+
+.wave-card-featured .wave-type {
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+  color: #fff;
 }
 
 /* the flag as a raised, glossy coin */
 .wave-coin {
   position: relative;
-  width: 54px;
-  height: 54px;
+  flex: none;
   border-radius: 50%;
   box-shadow:
     0 0 0 3px #fff,
     0 0 0 4px rgb(17 17 17 / 0.1),
-    -5px 9px 14px rgb(60 48 0 / 0.32);
+    0 8px 14px rgb(60 48 0 / 0.28);
 }
 
 .wave-coin::after {
@@ -192,15 +248,15 @@
   inset: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 24%, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 46%),
-    radial-gradient(circle at 72% 88%, rgb(0 0 0 / 0.2), transparent 55%);
+    radial-gradient(circle at 30% 24%, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0) 46%),
+    radial-gradient(circle at 72% 88%, rgb(0 0 0 / 0.18), transparent 55%);
 }
 
-.wave-ticket[data-featured] .wave-coin {
+.wave-card-featured .wave-coin {
   box-shadow:
     0 0 0 3px #2b2b2e,
     0 0 0 4px rgb(255 255 255 / 0.14),
-    -5px 9px 16px rgb(0 0 0 / 0.65);
+    0 8px 16px rgb(0 0 0 / 0.6);
 }
 
 .wave-facts {
@@ -224,16 +280,34 @@
   color: #141414;
 }
 
-.wave-ticket[data-featured] .wave-facts {
-  color: rgb(255 255 255 / 0.72);
+.wave-card-main .wave-facts {
+  gap: 6px;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
 }
 
-.wave-ticket[data-featured] .wave-facts svg {
+.wave-card-main .wave-facts li {
+  gap: 8px;
+}
+
+.wave-card-featured .wave-facts {
+  color: rgb(255 255 255 / 0.74);
+}
+
+.wave-card-featured .wave-facts svg {
   color: var(--color-sun);
 }
 
+@media (max-width: 400px) {
+  .wave-card:not(.wave-card-featured) {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    gap: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .wave-ticket {
+  .wave-card,
+  .wave-slot::after {
     transition: none;
   }
 }
